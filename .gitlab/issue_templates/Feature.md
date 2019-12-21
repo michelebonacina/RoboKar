@@ -1,4 +1,4 @@
-# New Proposal
+# New Feature
 
 - [] What:
 - [] Why:
