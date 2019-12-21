@@ -1,6 +1,6 @@
-# New Issue
-## <Title>
+# New Bug
 
-- [] What
-- [] How
-- [] When
+- [] What:
+- [] How:
+- [] When:
+- [] Notes:
