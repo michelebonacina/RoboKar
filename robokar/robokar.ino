@@ -1,3 +1,8 @@
+#include <Servo.h>
+
+// == library initialization
+Servo robokarServo;
+
 // == pins configuration ==
 int MOTOR_LEFT = 5;
 int MOTOR_LEFT_BACKWARD = 7;
@@ -14,6 +19,10 @@ int WHEELS_DIRECTION_FORWARD = 1;  // 01
 int WHEELS_DIRECTION_BACKWARD = 2; // 10
 int WHEELS_STATUS_ON = HIGH;
 int WHEELS_STATUS_OFF = LOW;
+// == head movement ==
+int HEAD_LEFT = 1;
+int HEAD_CENTER = 0;
+int HEAD_RIGHT = -1;
 
 // == startup configuration ==
 void setup()
@@ -25,13 +34,17 @@ void setup()
     pinMode(MOTOR_RIGHT, OUTPUT);
     pinMode(MOTOR_RIGHT_BACKWARD, OUTPUT);
     pinMode(MOTOR_RIGHT_FORWARD, OUTPUT);
+    // set servo pins
+    robokarServo.attach(3);
 }
 
 // == main program ==
 void loop()
 {
-    test_wheels();
-    delay(1000);
+    // test_wheels();
+    // test_servo();
+
+    delay(3000);
 }
 
 // == wheels test ==
@@ -60,6 +73,18 @@ void test_wheels(void)
     delay(500);
 }
 
+// == servo test ==
+void test_servo(void)
+{
+    look(HEAD_CENTER, 0);
+    delay(500);
+    look(HEAD_LEFT, 80);
+    delay(500);
+    look(HEAD_RIGHT, 80);
+    delay(500);
+    look(HEAD_CENTER, 0);
+}
+
 // == move the car ==
 // wheels: wheels to move, left or right. for all wheels use 'left | right'
 // direction: movement direction - forward, backward or brake
@@ -81,4 +106,24 @@ void move(int wheels, int direction, int status)
         digitalWrite(MOTOR_RIGHT_BACKWARD, direction & WHEELS_DIRECTION_BACKWARD);
         digitalWrite(MOTOR_RIGHT_FORWARD, direction & WHEELS_DIRECTION_FORWARD);
     }
+}
+
+// == move the head ==
+// direction: left, center or right
+// rotation: rotation angle, from 0 to 100 percent
+void look(int direction, int rotation)
+{
+    // calibration
+    int center = 97;
+    int max = 180;
+    int min = 15;
+    // compute degrees
+    int degrees = 97 + direction * ((max - min) / 2) * rotation / 100;
+    // check exeeding angles
+    if (degrees < min)
+        degrees = min;
+    else if (degrees > max)
+        degrees = max;
+    // rotate head
+    robokarServo.write(degrees);
 }
